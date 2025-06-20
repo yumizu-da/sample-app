@@ -1,0 +1,77 @@
+name: Deploy Sample App to Cloud Run
+
+on:
+  # push:
+  #   branches:
+  #     - main
+  workflow_dispatch:
+    inputs:
+      app_name:
+        description: 'App name'
+        required: true
+        default: 'sample-app'
+
+env:
+  IMAGE_NAME: asia-northeast2-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ inputs.app_name }}/${{ inputs.app_name }}
+  WORKLOAD_IDENTITY_PROVIDER: projects/${{ secrets.GCP_PROJECT_NUMBER }}/locations/global/workloadIdentityPools/prod-pool/providers/github
+  REGION: asia-northeast2
+  PORT: 8080
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  Build-and-Push-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - id: auth
+        name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ env.WORKLOAD_IDENTITY_PROVIDER }}
+      - name: Setup Google Cloud
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+      - name: Configure Docker
+        run: gcloud auth configure-docker ${{ env.REGION }}.pkg.dev
+      - name: Build Docker image
+        run: docker build --platform linux/amd64 -t ${{ env.IMAGE_NAME }}:latest -f Dockerfile .
+      - name: Push Docker image
+        run: docker push ${{ env.IMAGE_NAME }}:latest
+
+  Deploy-App:
+    needs: Build-and-Push-image
+    runs-on: ubuntu-latest
+    env:
+      CLOUD_LOGGING: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - id: auth
+        name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ env.WORKLOAD_IDENTITY_PROVIDER }}
+      - name: Setup Google Cloud
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+      - name: Deploy Cloud Run for Demo App
+        run: |
+          gcloud run deploy ${{ inputs.app_name }} \
+          --image ${{ env.IMAGE_NAME }}:latest \
+          --region=${{ env.REGION }} \
+          --platform managed \
+          --min-instances=0 \
+          --max-instances=1 \
+          --no-cpu-throttling  \
+          --cpu=1 \
+          --concurrency=10 \
+          --memory=512Mi \
+          --quiet \
+          --port ${{ env.PORT }} \
+          --set-env-vars=PROJECT_ID=${{ secrets.GCP_PROJECT_ID }},CLOUD_LOGGING=${{ env.CLOUD_LOGGING }}
