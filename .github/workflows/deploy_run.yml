@@ -37,7 +37,7 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
       - name: Configure Docker
-        run: gcloud auth configure-docker ${{ env.REGION }}.pkg.dev
+        run: gcloud auth configure-docker asia-northeast2-docker.pkg.dev
       - name: Build Docker image
         run: docker build --platform linux/amd64 -t ${{ env.IMAGE_NAME }}:latest -f Dockerfile .
       - name: Push Docker image
