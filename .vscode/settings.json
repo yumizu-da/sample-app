@@ -1,0 +1,17 @@
+{
+	"editor.formatOnType": true,
+	"editor.formatOnSave": true,
+	"editor.formatOnPaste": true,
+	"files.insertFinalNewline": true,
+	"editor.renderWhitespace": "boundary",
+	"[python]": {
+		"editor.defaultFormatter": "charliermarsh.ruff"
+	},
+	"ruff.configuration": "pyproject.toml",
+	"mypy-type-checker.args": [
+		"--config-file=pyproject.toml"
+	],
+	"[yaml]": {
+		"editor.defaultFormatter": "redhat.vscode-yaml"
+	},
+}

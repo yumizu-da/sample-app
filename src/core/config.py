@@ -6,7 +6,7 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     """Settings for the application"""
 
-    APP_NAME: str = "Sample App"
+    APP_NAME: str = "sample-app"
     PROJECT_ID: str = ""
     CLOUD_LOGGING: bool = False
 

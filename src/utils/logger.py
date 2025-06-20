@@ -35,7 +35,4 @@ def setup_logger(name: str, level: int = logging.DEBUG, cloud_logging: bool = Fa
     return logger
 
 
-logger = setup_logger(
-    name=settings.APP_NAME,
-    cloud_logging=settings.CLOUD_LOGGING
-)
+logger = setup_logger(name=settings.APP_NAME, cloud_logging=settings.CLOUD_LOGGING)
