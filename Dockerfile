@@ -29,4 +29,4 @@ COPY --from=builder /workspace/.venv /workspace/.venv
 COPY ./ ./
 EXPOSE 8080
 
-CMD ["uv", "run", "--no-sync", "streamlit", "run", "app.py", "--server.port=8080", "--server.address=0.0.0.0"]
+CMD ["uv", "run", "--no-sync", "streamlit", "run", "app.py"]
