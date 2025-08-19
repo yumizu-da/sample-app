@@ -23,7 +23,7 @@ class ResponseModel(BaseModel):
 
 if __name__ == "__main__":
     st.set_page_config(page_title="Simple Q&A App")
-    st.title("Simple Q&A App with Gemini")
+    st.title("Simple Q&A App")
 
     prompt_template = PromptTemplate.from_template(PROMPT)
     model = ChatOpenAI(model=settings.MODEL_NAME, temperature=0.3)
