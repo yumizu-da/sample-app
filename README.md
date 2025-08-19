@@ -3,5 +3,5 @@
 ## Run
 
 ```bash
-uv run streamlit run src/app.py
+uv run streamlit run app.py
 ```

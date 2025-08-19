@@ -7,7 +7,8 @@ class Settings(BaseSettings):
     """Settings for the application"""
 
     APP_NAME: str = "sample-app"
-    PROJECT_ID: str = ""
+    MODEL_NAME: str = "gpt-4.1-nano"
+    OPENAI_API_KEY: str = ""
     CLOUD_LOGGING: bool = False
 
 

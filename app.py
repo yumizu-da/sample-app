@@ -1,21 +1,45 @@
 import json
 
 import streamlit as st
+from langchain_openai import ChatOpenAI
+from langchain.prompts import PromptTemplate
+from pydantic import BaseModel
+from pydantic import Field
 
+from src.core.config import settings
 from src.utils.logger import logger
+
+PROMPT = """
+以下の質問に対して、適切な回答を生成してください。
+必要に応じてweb検索を行ってください。
+
+{question}
+"""
+
+
+class ResponseModel(BaseModel):
+    answer: str = Field(description="日本語で記述された回答")
 
 
 if __name__ == "__main__":
-    st.set_page_config(page_title="Sample App")
-    st.title("Sample App")
-    selected_food = st.radio("Which food do you like?", ["Sushi", "Ramen"])
+    st.set_page_config(page_title="Simple Q&A App")
+    st.title("Simple Q&A App with Gemini")
 
-    if st.button("Submit"):
-        st.write(f"You chose {selected_food}")
-        st.balloons()
+    prompt_template = PromptTemplate.from_template(PROMPT)
+    model = ChatOpenAI(model=settings.MODEL_NAME, temperature=0.3)
+    chain = prompt_template | model.with_structured_output(ResponseModel)
 
-        log_info = {
-            "user_id": "12345",
-            "food": selected_food,
-        }
-        logger.info(json.dumps(log_info))
+    question = st.text_area("Input your question", height=100)
+
+    if st.button("Generate response"):
+        if question:
+            with st.spinner("Generating response..."):
+                input_data: dict[str, str] = {"question": question}
+                response: ResponseModel = chain.invoke(input_data)  # type: ignore
+                st.markdown(response.answer)
+
+                log_info = {
+                    "question": question,
+                    "response": response.answer,
+                }
+                logger.info(json.dumps(log_info))

@@ -74,4 +74,5 @@ jobs:
           --memory=512Mi \
           --quiet \
           --port ${{ env.PORT }} \
-          --set-env-vars=PROJECT_ID="${{ secrets.GCP_PROJECT_ID }},CLOUD_LOGGING=${{ env.CLOUD_LOGGING }}"
+          --set-secrets=OPENAI_API_KEY=openai-api-key:latest \
+          --set-env-vars=CLOUD_LOGGING=${{ env.CLOUD_LOGGING }}
