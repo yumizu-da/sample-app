@@ -63,6 +63,7 @@ jobs:
       - name: Deploy Cloud Run for Demo App
         run: |
           gcloud run deploy ${{ inputs.app_name }} \
+          --service-account=${{ secrets.GCP_SERVICE_ACCOUNT }} \
           --image ${{ env.IMAGE_NAME }}:latest \
           --region=${{ env.REGION }} \
           --platform managed \
