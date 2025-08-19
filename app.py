@@ -11,7 +11,6 @@ from src.utils.logger import logger
 
 PROMPT = """
 以下の質問に対して、適切な回答を生成してください。
-必要に応じてweb検索を行ってください。
 
 {question}
 """
