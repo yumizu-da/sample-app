@@ -5,7 +5,11 @@
 	"files.insertFinalNewline": true,
 	"editor.renderWhitespace": "boundary",
 	"[python]": {
-		"editor.defaultFormatter": "charliermarsh.ruff"
+		"editor.defaultFormatter": "charliermarsh.ruff",
+		"editor.formatOnSave": true,
+		"editor.codeActionsOnSave": {
+			"source.organizeImports": "explicit"
+		}
 	},
 	"ruff.configuration": "pyproject.toml",
 	"mypy-type-checker.args": [

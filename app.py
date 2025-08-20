@@ -1,10 +1,9 @@
 import json
 
 import streamlit as st
-from langchain_openai import ChatOpenAI
 from langchain.prompts import PromptTemplate
-from pydantic import BaseModel
-from pydantic import Field
+from langchain_openai import ChatOpenAI
+from pydantic import BaseModel, Field
 
 from src.core.config import settings
 from src.utils.logger import logger
@@ -39,6 +38,6 @@ if __name__ == "__main__":
 
                 log_info = {
                     "question": question,
-                    "response": response.answer,
+                    "answer": response.answer,
                 }
                 logger.info(json.dumps(log_info))
